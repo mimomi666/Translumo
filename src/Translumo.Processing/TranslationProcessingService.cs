@@ -245,7 +245,7 @@ namespace Translumo.Processing
 
                         sequentialText = false;
                         //resultLogger.LogResults(detectedResults.Select(res => res.Result), screenshot);
-                        activeTranslationTasks.Add(TranslateTextAsync(bestDetected.Text, iterationId));
+                        activeTranslationTasks.Add(TranslateAsync(bestDetected.Text, screenshot, iterationId));
                     }
                 }
                 catch (CaptureException ex)
@@ -299,14 +299,15 @@ namespace Translumo.Processing
             try
             {
                 Task translationTask;
+                byte[] screenshot = null;
                 lock (_obj)
                 {
-                    byte[] screenshot = _onceTimeCapturer.CaptureScreen(captureArea);
+                    screenshot = _onceTimeCapturer.CaptureScreen(captureArea);
                     var taskResults = _engines.Select(engine => _textProvider.GetTextAsync(engine, screenshot)).ToArray();
                     // TODO: sometimes one of task (win tts) is not complete long time and translation is not working
                     Task.WaitAll(taskResults);
                     TextDetectionResult bestDetected = GetBestDetectionResult(taskResults, 3);
-                    translationTask = TranslateTextAsync(bestDetected.Text, Guid.NewGuid());
+                    translationTask = TranslateAsync(bestDetected.Text, screenshot, Guid.NewGuid());
                 }
 
                 translationTask.Wait(TRANSLATION_TIMEOUT_MS);
@@ -328,9 +329,20 @@ namespace Translumo.Processing
             }
         }
 
-        private async Task TranslateTextAsync(string text, Guid iterationId)
+        private async Task TranslateAsync(string text, byte[] imageData, Guid iterationId)
         {
-            var translation = await _translator.TranslateTextAsync(text);
+            string translation;
+            
+            // Check if translator supports image translation
+            if (_translator is IImageTranslator imageTranslator && imageTranslator.SupportsImageTranslation)
+            {
+                translation = await imageTranslator.TranslateImageAsync(imageData);
+            }
+            else
+            {
+                translation = await _translator.TranslateTextAsync(text);
+            }
+            
             if (!string.IsNullOrWhiteSpace(translation) && !_textResultCacheService.IsTranslatedCached(translation, iterationId))
             {
                 Interlocked.Exchange(ref _lastTranslatedTextTicks, DateTime.UtcNow.Ticks);
