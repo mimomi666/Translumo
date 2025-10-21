@@ -369,6 +369,28 @@ Currently, the implementation uses default parameters. If you need custom parame
 
 > Note: During the build, **binaries_extract.bat** will automatically download and extract models and Python binaries (~400 MB) to the target output directory.
 
+## Creating Releases
+
+**For Maintainers**: This repository includes automated GitHub Actions workflows to build and publish releases.
+
+📖 **Quick Start**: See [QUICKSTART_RELEASE.md](QUICKSTART_RELEASE.md) or [QUICKSTART_RELEASE_CN.md](QUICKSTART_RELEASE_CN.md) (中文版)
+
+📚 **Detailed Guide**: See [RELEASE_GUIDE.md](RELEASE_GUIDE.md) for comprehensive instructions
+
+**Easy Method**: 
+1. Go to [Actions](../../actions) → "Build and Release"
+2. Click "Run workflow"
+3. Enter version number (e.g., `1.0.2`)
+4. The workflow will automatically build, package, and create a GitHub release
+
+**Tag Method**: 
+```bash
+git tag v1.0.2
+git push origin v1.0.2
+```
+
+The release package will include everything needed to run Translumo, including the .NET runtime, OCR models, and Python dependencies (~500-600 MB total).
+
 ## Credits
 
 - [Material Design In XAML Toolkit](https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit)  
