@@ -37,11 +37,19 @@ This fork adds **Multimodal AI Translation** support, allowing Translumo to use 
 
 ## Download Translumo
 
-**Direct download link to the latest version:**  
-[Translumo_1.0.2.zip](https://github.com/ramjke/Translumo/releases/download/v.1.0.2/Translumo_1.0.2.zip)   
+### 🎉 Download This Fork with Multimodal Translation
+
+**Latest release with multimodal support:**  
+👉 **[Download from Releases](https://github.com/mimomi666/Translumo/releases/latest)**
+
 After downloading, unzip the archive and run `Translumo.exe`.
 
-Version 1.0.x includes many changes and improvements compared to versions 0.9.x. You can view the full list of updates on the [Releases page](https://github.com/ramjke/Translumo/releases). 
+This fork includes all features from the original Translumo v1.0.2 plus **multimodal AI translation** support.
+
+### Download Original Version
+
+If you prefer the original version without multimodal features:  
+[Translumo_1.0.2.zip](https://github.com/ramjke/Translumo/releases/download/v.1.0.2/Translumo_1.0.2.zip) (Original repository) 
 
 ## Main Features
 

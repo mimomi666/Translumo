@@ -1,0 +1,173 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.2, v1.1.0, etc.
+  workflow_dispatch:  # Allow manual trigger
+    inputs:
+      version:
+        description: 'Release version (e.g., 1.0.2)'
+        required: true
+        default: '1.0.2'
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore Translumo.sln
+    
+    - name: Build application
+      run: dotnet publish src/Translumo/Translumo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+      env:
+        SkipBinariesExtract: 'false'
+    
+    - name: Get version
+      id: version
+      shell: pwsh
+      run: |
+        if ("${{ github.event_name }}" -eq "push" -and "${{ github.ref_type }}" -eq "tag") {
+          $version = "${{ github.ref_name }}" -replace '^v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "TAG=${{ github.ref_name }}" >> $env:GITHUB_OUTPUT
+        } else {
+          $version = "${{ github.event.inputs.version }}"
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          echo "TAG=v$version" >> $env:GITHUB_OUTPUT
+        }
+        echo "Version: $version"
+    
+    - name: Create release package
+      shell: pwsh
+      run: |
+        $version = "${{ steps.version.outputs.VERSION }}"
+        $packageName = "Translumo_$version"
+        $packagePath = "$packageName.zip"
+        
+        # Create a temporary directory for packaging
+        New-Item -ItemType Directory -Path $packageName -Force
+        
+        # Copy the main executable
+        Copy-Item -Path "publish\Translumo.exe" -Destination "$packageName\" -Force
+        
+        # Copy models and python directories if they exist
+        if (Test-Path "publish\models") {
+          Copy-Item -Path "publish\models" -Destination "$packageName\" -Recurse -Force
+        }
+        if (Test-Path "publish\python") {
+          Copy-Item -Path "publish\python" -Destination "$packageName\" -Recurse -Force
+        }
+        
+        # Copy README and LICENSE
+        Copy-Item -Path "README.md" -Destination "$packageName\" -Force
+        Copy-Item -Path "LICENSE" -Destination "$packageName\" -Force
+        if (Test-Path "IMPLEMENTATION_SUMMARY.md") {
+          Copy-Item -Path "IMPLEMENTATION_SUMMARY.md" -Destination "$packageName\" -Force
+        }
+        
+        # Create zip file
+        Compress-Archive -Path "$packageName\*" -DestinationPath $packagePath -Force
+        
+        # Set output
+        echo "PACKAGE_PATH=$packagePath" >> $env:GITHUB_OUTPUT
+        echo "PACKAGE_NAME=$packageName" >> $env:GITHUB_OUTPUT
+      id: package
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.version.outputs.TAG }}
+        name: Translumo ${{ steps.version.outputs.VERSION }} (Multimodal)
+        body: |
+          # Translumo ${{ steps.version.outputs.VERSION }} with Multimodal Translation
+          
+          ## 🌟 What's New in This Release
+          
+          This release includes **Multimodal AI Translation** support, allowing Translumo to use advanced AI models (GPT-4o, GPT-4 Vision, Claude 3, etc.) to translate images directly without OCR.
+          
+          ### ✨ Features
+          - **Higher accuracy** for complex layouts and stylized text
+          - **Direct image translation** without OCR preprocessing
+          - **Support for any OpenAI-compatible vision API**
+          - **Customizable prompts** for better translation control
+          - All original Translumo features (WindowsOCR, DeepL, etc.)
+          
+          ## 📥 Download and Installation
+          
+          1. Download `${{ steps.package.outputs.PACKAGE_NAME }}.zip`
+          2. Extract the archive to a folder
+          3. Run `Translumo.exe`
+          
+          ## 📖 Quick Start
+          
+          ### For Traditional Translation (Free)
+          1. Press **Alt+G** to open settings
+          2. Select source language and target language
+          3. Select **WindowsOCR** as the OCR engine
+          4. Select **DeepL** or **Google** as translator
+          5. Press **Alt+Q** to define capture area
+          6. Press **~** to start translation
+          
+          ### For Multimodal Translation (AI-powered)
+          1. Press **Alt+G** to open settings
+          2. Navigate to **Languages** tab
+          3. Select **Multimodal** as translator
+          4. Enter your API key (OpenAI, Azure, or compatible)
+          5. Customize the prompt for your target language
+          6. Press **Alt+Q** to define capture area
+          7. Press **~** to start translation
+          
+          ## 📚 Documentation
+          
+          See the [README](https://github.com/mimomi666/Translumo/blob/main/README.md) for detailed setup instructions, including:
+          - Multimodal translation tutorial
+          - API configuration examples
+          - Troubleshooting guide
+          - Cost comparison
+          
+          ## ⚙️ System Requirements
+          
+          - Windows 10 version 2004 (build 19041) or later, or Windows 11
+          - DirectX 11 compatible GPU
+          - 2 GB RAM (8 GB for EasyOCR)
+          - .NET 8 Runtime (included in the self-contained package)
+          
+          ## 🔗 Links
+          
+          - **Original Repository**: https://github.com/ramjke/Translumo
+          - **This Fork**: https://github.com/mimomi666/Translumo
+          - **Full Documentation**: [README.md](https://github.com/mimomi666/Translumo/blob/main/README.md)
+          - **Implementation Details**: [IMPLEMENTATION_SUMMARY.md](https://github.com/mimomi666/Translumo/blob/main/IMPLEMENTATION_SUMMARY.md)
+          
+          ## 📄 License
+          
+          Apache License 2.0
+          
+          ---
+          
+          **Note**: First-time launch may take longer as dependencies are initialized. For multimodal translation, ensure you have a valid API key with sufficient credits.
+        files: |
+          ${{ steps.package.outputs.PACKAGE_PATH }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Translumo-${{ steps.version.outputs.VERSION }}
+        path: ${{ steps.package.outputs.PACKAGE_PATH }}
+        retention-days: 90
