@@ -1,0 +1,41 @@
+name: Build Test
+
+on:
+  workflow_dispatch:  # Allow manual trigger
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore Translumo.sln
+    
+    - name: Build application
+      run: dotnet build Translumo.sln -c Release
+      env:
+        SkipBinariesExtract: 'true'
+    
+    - name: Test publish
+      run: dotnet publish src/Translumo/Translumo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+      env:
+        SkipBinariesExtract: 'true'
+    
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Translumo-build-test
+        path: publish/Translumo.exe
+        retention-days: 7

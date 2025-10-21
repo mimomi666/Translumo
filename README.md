@@ -37,11 +37,19 @@ This fork adds **Multimodal AI Translation** support, allowing Translumo to use 
 
 ## Download Translumo
 
-**Direct download link to the latest version:**  
-[Translumo_1.0.2.zip](https://github.com/ramjke/Translumo/releases/download/v.1.0.2/Translumo_1.0.2.zip)   
+### 🎉 Download This Fork with Multimodal Translation
+
+**Latest release with multimodal support:**  
+👉 **[Download from Releases](https://github.com/mimomi666/Translumo/releases/latest)**
+
 After downloading, unzip the archive and run `Translumo.exe`.
 
-Version 1.0.x includes many changes and improvements compared to versions 0.9.x. You can view the full list of updates on the [Releases page](https://github.com/ramjke/Translumo/releases). 
+This fork includes all features from the original Translumo v1.0.2 plus **multimodal AI translation** support.
+
+### Download Original Version
+
+If you prefer the original version without multimodal features:  
+[Translumo_1.0.2.zip](https://github.com/ramjke/Translumo/releases/download/v.1.0.2/Translumo_1.0.2.zip) (Original repository) 
 
 ## Main Features
 
@@ -360,6 +368,28 @@ Currently, the implementation uses default parameters. If you need custom parame
     ```
 
 > Note: During the build, **binaries_extract.bat** will automatically download and extract models and Python binaries (~400 MB) to the target output directory.
+
+## Creating Releases
+
+**For Maintainers**: This repository includes automated GitHub Actions workflows to build and publish releases.
+
+📖 **Quick Start**: See [QUICKSTART_RELEASE.md](QUICKSTART_RELEASE.md) or [QUICKSTART_RELEASE_CN.md](QUICKSTART_RELEASE_CN.md) (中文版)
+
+📚 **Detailed Guide**: See [RELEASE_GUIDE.md](RELEASE_GUIDE.md) for comprehensive instructions
+
+**Easy Method**: 
+1. Go to [Actions](../../actions) → "Build and Release"
+2. Click "Run workflow"
+3. Enter version number (e.g., `1.0.2`)
+4. The workflow will automatically build, package, and create a GitHub release
+
+**Tag Method**: 
+```bash
+git tag v1.0.2
+git push origin v1.0.2
+```
+
+The release package will include everything needed to run Translumo, including the .NET runtime, OCR models, and Python dependencies (~500-600 MB total).
 
 ## Credits
 
