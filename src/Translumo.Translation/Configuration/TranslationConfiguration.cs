@@ -52,10 +52,10 @@ namespace Translumo.Translation.Configuration
 
         public MultimodalConfiguration MultimodalSettings
         {
-            get => _multimodalSettings;
+            get => _multimodalSettings ?? MultimodalConfiguration.Default;
             set
             {
-                SetProperty(ref _multimodalSettings, value);
+                SetProperty(ref _multimodalSettings, value ?? MultimodalConfiguration.Default);
             }
         }
 
