@@ -76,8 +76,20 @@ namespace Translumo.Translation.Multimodal
         {
             var config = container.Config;
 
-            // Convert image to base64
-            var base64Image = Convert.ToBase64String(imageData);
+            // Convert TIFF image data to PNG for better API compatibility
+            string base64Image;
+            using (var ms = new System.IO.MemoryStream(imageData))
+            {
+                using (var bitmap = new System.Drawing.Bitmap(ms))
+                {
+                    using (var pngStream = new System.IO.MemoryStream())
+                    {
+                        bitmap.Save(pngStream, System.Drawing.Imaging.ImageFormat.Png);
+                        base64Image = Convert.ToBase64String(pngStream.ToArray());
+                    }
+                }
+            }
+            
             var imageUrl = $"data:image/png;base64,{base64Image}";
 
             // Build request
