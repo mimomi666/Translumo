@@ -73,6 +73,11 @@ namespace Translumo.MVVM.ViewModels
             }
         }
 
+        public bool IsMultimodalTranslator
+        {
+            get => Model.Translator == Translators.Multimodal;
+        }
+
         public TTSEngines TtsSystem
         {
             get => TtsSettings.TtsSystem;
@@ -117,6 +122,14 @@ namespace Translumo.MVVM.ViewModels
             this.TtsSettings = ttsConfiguration;
             this.TtsSettings.TtsLanguage = this.Model.TranslateToLang;
 
+            // Subscribe to translator changes to update UI
+            this.Model.PropertyChanged += (sender, e) =>
+            {
+                if (e.PropertyName == nameof(Model.Translator))
+                {
+                    OnPropertyChanged(nameof(IsMultimodalTranslator));
+                }
+            };
 
             this._languageService = languageService;
             this._dialogService = dialogService;

@@ -72,6 +72,31 @@ namespace Translumo.Utils.Http
             return result;
         }
 
+        public virtual async Task<HttpResponse> RequestWebDataAsync(string url, HttpMethods method, string dataIn, IDictionary<string, string> headers, bool acceptCookie = false)
+        {
+            var originalHeaders = OptionalHeaders;
+            try
+            {
+                if (headers != null)
+                {
+                    OptionalHeaders = headers;
+                }
+                
+                HttpResponse result = new HttpResponse();
+                await Task.Run(() => result = RequestWebData(url, method, dataIn, acceptCookie)).ConfigureAwait(false);
+                if (ThrowExceptions && result.InnerException != null)
+                {
+                    throw result.InnerException;
+                }
+
+                return result;
+            }
+            finally
+            {
+                OptionalHeaders = originalHeaders;
+            }
+        }
+
         public virtual HttpResponse RequestWebData(string url, HttpMethods method, bool acceptCookie = false)
         {
             return RequestWebDataInternal(url, method, null, acceptCookie);

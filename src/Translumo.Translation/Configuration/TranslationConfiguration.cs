@@ -10,7 +10,8 @@ namespace Translumo.Translation.Configuration
         {
             TranslateFromLang = Languages.English,
             TranslateToLang = Languages.Russian,
-            ProxySettings = new List<Proxy>()
+            ProxySettings = new List<Proxy>(),
+            MultimodalSettings = MultimodalConfiguration.Default
         };
 
         public Languages TranslateFromLang
@@ -49,9 +50,19 @@ namespace Translumo.Translation.Configuration
             }
         }
 
+        public MultimodalConfiguration MultimodalSettings
+        {
+            get => _multimodalSettings ?? MultimodalConfiguration.Default;
+            set
+            {
+                SetProperty(ref _multimodalSettings, value ?? MultimodalConfiguration.Default);
+            }
+        }
+
         private Languages _translateFromLang;
         private Languages _translateToLang;
         private Translators _translator;
         private List<Proxy> _proxySettings = new List<Proxy>();
+        private MultimodalConfiguration _multimodalSettings = MultimodalConfiguration.Default;
     }
 }
