@@ -8,6 +8,32 @@
 
 <p align="center"><strong>English</strong> | <a href="docs/README-RU.md"><strong>Русский</strong></a></p>
 
+## 🔥 Fork Notice | 分支说明
+
+This is a **fork** of the original [Translumo repository](https://github.com/ramjke/Translumo) with **enhanced multimodal translation capabilities**.
+
+**Original Repository**: https://github.com/ramjke/Translumo
+
+### ✨ What's New in This Fork | 本分支的新功能
+
+This fork adds **Multimodal AI Translation** support, allowing Translumo to use advanced AI models (GPT-4o, GPT-4 Vision, Claude 3, etc.) to translate images directly without OCR. This provides:
+
+- **Higher accuracy** for complex layouts and stylized text
+- **Direct image translation** without OCR preprocessing
+- **Support for any OpenAI-compatible vision API**
+- **Customizable prompts** for better translation control
+
+本分支新增了**多模态 AI 翻译**支持，允许 Translumo 使用先进的 AI 模型（GPT-4o、GPT-4 Vision、Claude 3 等）直接翻译图像，无需 OCR。这带来了：
+
+- **更高的准确性**，特别是对于复杂布局和风格化文本
+- **直接图像翻译**，无需 OCR 预处理
+- **支持任何 OpenAI 兼容的视觉 API**
+- **可自定义提示词**，更好地控制翻译效果
+
+📖 **See the [Multimodal Translation Tutorial](#multimodal-translation-tutorial) below for setup and usage guide.**
+
+📖 **查看下方的[多模态翻译教程](#multimodal-translation-tutorial)了解设置和使用指南。**
+
 ## Sibling Project
 This project has a sibling called **[Lookupper](https://lookupper.com)** — an on-screen dictionary for language learning. It is similar to Translumo but built for a different purpose. Lookupper is built to help you *learn* a language, not just depend on a translator forever.
 
@@ -107,11 +133,237 @@ A: Other applications may be intercepting hotkeys.
 **Q: Text detection failed (TesseractOCREngine)**  
 A: Ensure the application path contains only Latin letters.
 
+## Multimodal Translation Tutorial
+
+### 🌟 What is Multimodal Translation? | 什么是多模态翻译？
+
+Multimodal translation uses AI models with vision capabilities (like GPT-4o, GPT-4 Vision, Claude 3) to translate text directly from images, bypassing traditional OCR entirely. This results in:
+
+- Better handling of stylized fonts and complex layouts
+- More accurate translations with context awareness
+- Support for vertical text, overlapping text, and decorative elements
+- Direct translation without text extraction errors
+
+多模态翻译使用具有视觉能力的 AI 模型（如 GPT-4o、GPT-4 Vision、Claude 3）直接从图像翻译文本，完全绕过传统 OCR。这带来了：
+
+- 更好地处理风格化字体和复杂布局
+- 具有上下文感知的更准确翻译
+- 支持竖排文本、重叠文本和装饰元素
+- 无需文本提取错误的直接翻译
+
+### 📋 Prerequisites | 前置要求
+
+1. **API Key**: You need an API key from one of the supported services:
+   - OpenAI (GPT-4o, GPT-4 Vision) - https://platform.openai.com/api-keys
+   - Azure OpenAI with vision models
+   - Any OpenAI-compatible API service with vision support
+
+2. **API Credits**: Ensure your account has sufficient credits (multimodal calls cost more than text-only)
+
+1. **API 密钥**：您需要来自以下支持服务之一的 API 密钥：
+   - OpenAI (GPT-4o、GPT-4 Vision) - https://platform.openai.com/api-keys
+   - 带有视觉模型的 Azure OpenAI
+   - 任何支持视觉的 OpenAI 兼容 API 服务
+
+2. **API 额度**：确保您的账户有足够的额度（多模态调用比纯文本调用更昂贵）
+
+### 🚀 Step-by-Step Setup Guide | 分步设置指南
+
+#### Step 1: Open Settings | 第 1 步：打开设置
+
+Press **Alt+G** to open the Translumo settings window.
+
+按 **Alt+G** 打开 Translumo 设置窗口。
+
+#### Step 2: Select Multimodal Translator | 第 2 步：选择多模态翻译器
+
+1. Navigate to the **Languages** tab
+2. In the **Translator** dropdown, select **Multimodal**
+3. A new configuration panel will appear with four fields
+
+1. 转到 **Languages（语言）** 选项卡
+2. 在 **Translator（翻译器）** 下拉菜单中，选择 **Multimodal（多模态）**
+3. 将出现一个包含四个字段的新配置面板
+
+#### Step 3: Configure API Settings | 第 3 步：配置 API 设置
+
+**For OpenAI (Recommended) | 使用 OpenAI（推荐）：**
+
+- **Base URL**: `https://api.openai.com/v1/chat/completions` (default, no change needed)
+- **API Key**: Enter your OpenAI API key (starts with `sk-...`)
+- **Model Name**: `gpt-4o` (recommended) or `gpt-4-vision-preview`
+- **Prompt**: Customize based on your target language (see examples below)
+
+**For Azure OpenAI | 使用 Azure OpenAI：**
+
+- **Base URL**: `https://<your-resource>.openai.azure.com/openai/deployments/<deployment-name>/chat/completions?api-version=2024-02-15-preview`
+- **API Key**: Your Azure OpenAI API key
+- **Model Name**: Your deployment name
+- **Prompt**: Customize based on your target language
+
+**For Other Compatible APIs | 使用其他兼容 API：**
+
+- **Base URL**: Your service's chat completions endpoint
+- **API Key**: Your service's API key
+- **Model Name**: Check your service's documentation
+- **Prompt**: Customize based on your target language
+
+#### Step 4: Customize the Prompt | 第 4 步：自定义提示词
+
+The prompt tells the AI model what to do with the image. Here are examples for different languages:
+
+提示词告诉 AI 模型如何处理图像。以下是不同语言的示例：
+
+**English to Chinese | 英译中：**
+```
+Translate all text in this image to Chinese. Only output the translated text, no explanations.
+```
+
+**Japanese to English | 日译英：**
+```
+Translate all Japanese text in this image to English. Only output the translated text, no explanations.
+```
+
+**Chinese to English | 中译英：**
+```
+Translate all Chinese text in this image to English. Only output the translated text, no explanations.
+```
+
+**Korean to Chinese | 韩译中：**
+```
+Translate all Korean text in this image to Chinese. Only output the translated text, no explanations.
+```
+
+**With Formatting Preservation | 保持格式：**
+```
+Translate all text in this image to Chinese. Maintain the original line breaks and formatting. Only output the translated text.
+```
+
+**With Context Explanation | 包含上下文解释：**
+```
+Translate all text in this image to English and briefly explain any cultural references or context.
+```
+
+#### Step 5: Select Source Language | 第 5 步：选择源语言
+
+Even though multimodal translation doesn't use OCR, you should still select the **Source Language** that matches your content for proper handling.
+
+即使多模态翻译不使用 OCR，您仍应选择与内容匹配的**源语言**以便正确处理。
+
+#### Step 6: Define Capture Area | 第 6 步：定义捕获区域
+
+1. Press **Alt+Q**
+2. Click and drag to select the area you want to translate
+3. **Tip**: Smaller capture areas = lower API costs and faster processing
+
+1. 按 **Alt+Q**
+2. 点击并拖动以选择要翻译的区域
+3. **提示**：较小的捕获区域 = 更低的 API 成本和更快的处理速度
+
+#### Step 7: Start Translation | 第 7 步：开始翻译
+
+Press **~** (tilde key) to start the translation. The captured image will be sent to the multimodal API, and the translation will appear in the overlay window.
+
+按 **~**（波浪号键）开始翻译。捕获的图像将被发送到多模态 API，翻译结果将显示在覆盖窗口中。
+
+### 💡 Tips and Best Practices | 提示和最佳实践
+
+1. **Start with Small Areas**: Test with small capture areas first to verify your setup and minimize costs
+   
+   **从小区域开始**：首先使用小的捕获区域进行测试，以验证设置并降低成本
+
+2. **Optimize Prompts**: Experiment with different prompts to get better results for your specific use case
+   
+   **优化提示词**：尝试不同的提示词，为您的特定用例获得更好的结果
+
+3. **Use Proxy if Needed**: If you experience rate limiting, configure proxies under **Languages → Proxy tab**
+   
+   **必要时使用代理**：如果遇到速率限制，请在 **Languages → Proxy** 选项卡下配置代理
+
+4. **Monitor API Usage**: Keep track of your API usage and costs through your provider's dashboard
+   
+   **监控 API 使用情况**：通过提供商的仪表板跟踪您的 API 使用情况和成本
+
+5. **Fallback Option**: Keep traditional translators (like DeepL) configured so you can switch when needed
+   
+   **备用选项**：保持传统翻译器（如 DeepL）配置，以便在需要时切换
+
+### ⚙️ Advanced Configuration | 高级配置
+
+**Using Local Models | 使用本地模型：**
+
+If you're running a local vision model (e.g., through LM Studio or LocalAI):
+
+如果您正在运行本地视觉模型（例如通过 LM Studio 或 LocalAI）：
+
+- **Base URL**: `http://localhost:1234/v1/chat/completions` (or your local server URL)
+- **API Key**: May not be required (use `none` or any value)
+- **Model Name**: Your local model name
+- **Prompt**: Standard translation prompt
+
+**Custom Model Parameters | 自定义模型参数：**
+
+Currently, the implementation uses default parameters. If you need custom parameters (temperature, max_tokens, etc.), you may need to modify the API endpoint or use a proxy service that allows parameter injection.
+
+当前实现使用默认参数。如果需要自定义参数（temperature、max_tokens 等），您可能需要修改 API 端点或使用允许参数注入的代理服务。
+
+### 🔧 Troubleshooting | 故障排除
+
+**Problem: "Multimodal API error: Unauthorized"**
+- Solution: Check that your API key is correct and has not expired
+- 解决方案：检查您的 API 密钥是否正确且未过期
+
+**Problem: "Multimodal API error: Model not found"**
+- Solution: Verify the model name is correct for your service
+- 解决方案：验证模型名称对您的服务是否正确
+
+**Problem: No translation appears**
+- Solution: Check your internet connection, API credits, and console logs for detailed errors
+- 解决方案：检查您的互联网连接、API 额度和控制台日志以获取详细错误
+
+**Problem: Translation is too slow**
+- Solution: Use smaller capture areas, or switch to a faster model (e.g., gpt-4o-mini if available)
+- 解决方案：使用较小的捕获区域，或切换到更快的模型（例如 gpt-4o-mini，如果可用）
+
+**Problem: High API costs**
+- Solution: Use traditional OCR+translation for bulk content, reserve multimodal for difficult text
+- 解决方案：对于大量内容使用传统的 OCR+翻译，为困难文本保留多模态翻译
+
+### 📊 Cost Comparison | 成本比较
+
+**Traditional Translation (OCR + DeepL/Google):**
+- Nearly free for unlimited use
+- 几乎免费无限使用
+
+**Multimodal Translation (GPT-4o):**
+- ~$0.002-0.01 per image (varies by image size and model)
+- 每张图片约 $0.002-0.01（因图片大小和模型而异）
+
+**Recommendation**: Use multimodal translation for challenging content where OCR fails, and traditional translation for regular text.
+
+**建议**：对 OCR 失败的挑战性内容使用多模态翻译，对常规文本使用传统翻译。
+
+### 📚 Additional Resources | 其他资源
+
+- **Full Documentation**: See [docs/MULTIMODAL.md](docs/MULTIMODAL.md) for technical details
+- **Implementation Summary**: See [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) for development details
+- **Original Repository**: https://github.com/ramjke/Translumo
+
+- **完整文档**：查看 [docs/MULTIMODAL.md](docs/MULTIMODAL.md) 了解技术细节
+- **实现摘要**：查看 [IMPLEMENTATION_SUMMARY.md](IMPLEMENTATION_SUMMARY.md) 了解开发详情
+- **原始仓库**：https://github.com/ramjke/Translumo
+
 ## Build
 
 *Visual Studio 2022 and .NET 8 SDK are required.*
 
-1. Clone the repository (the **master** branch always corresponds to the latest release):
+1. Clone this fork repository:
+
+    ```bash
+    git clone https://github.com/mimomi666/Translumo.git
+    ```
+
+   Or clone the original repository:
 
     ```bash
     git clone https://github.com/ramjke/Translumo.git
