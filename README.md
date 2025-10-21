@@ -34,16 +34,6 @@ This fork adds **Multimodal AI Translation** support, allowing Translumo to use 
 
 📖 **查看下方的[多模态翻译教程](#multimodal-translation-tutorial)了解设置和使用指南。**
 
-## Sibling Project
-This project has a sibling called **[Lookupper](https://lookupper.com)** — an on-screen dictionary for language learning. It is similar to Translumo but built for a different purpose. Lookupper is built to help you *learn* a language, not just depend on a translator forever.
-
-Lookupper is my commercial project with a free version. If you find it useful and decide to grab the Pro version, you'll also be supporting the development of both Lookupper and Translumo.
-
-
-<a href="https://lookupper.com">
-<img width="300" alt="Lookupper" src="https://github.com/user-attachments/assets/ef2f83b3-e15f-4bd3-826e-858266f36c93" />
-</a>
-
 
 ## Download Translumo
 
