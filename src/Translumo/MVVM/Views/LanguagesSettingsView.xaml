@@ -97,6 +97,66 @@
                     Content="{DynamicResource Str.LangSettings.TtsSystem}"
                     Style="{StaticResource ControlCaptionLabel}" />
             </StackPanel>
+            <GroupBox 
+                Margin="0,20,0,0" 
+                Style="{StaticResource MaterialDesignGroupBox}"
+                Visibility="{Binding IsMultimodalTranslator, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <GroupBox.Header>
+                    <Label
+                        Margin="0,-7,0,-7"
+                        Content="Multimodal Settings"
+                        Style="{StaticResource SecondaryHeaderLabel}" />
+                </GroupBox.Header>
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <Label 
+                            Width="100"
+                            Content="Base URL:"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                        <TextBox 
+                            Width="350"
+                            FontSize="12"
+                            Text="{Binding Path=Model.MultimodalSettings.BaseUrl, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource MaterialDesignTextBox}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <Label 
+                            Width="100"
+                            Content="API Key:"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                        <TextBox 
+                            Width="350"
+                            FontSize="12"
+                            Text="{Binding Path=Model.MultimodalSettings.ApiKey, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource MaterialDesignTextBox}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                        <Label 
+                            Width="100"
+                            Content="Model Name:"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                        <TextBox 
+                            Width="350"
+                            FontSize="12"
+                            Text="{Binding Path=Model.MultimodalSettings.ModelName, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource MaterialDesignTextBox}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0,5,0,5">
+                        <Label 
+                            Content="Prompt:"
+                            Style="{StaticResource ControlCaptionLabel}" />
+                        <TextBox 
+                            Width="450"
+                            Height="80"
+                            FontSize="12"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            VerticalScrollBarVisibility="Auto"
+                            Text="{Binding Path=Model.MultimodalSettings.Prompt, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{DynamicResource MaterialDesignTextBox}" />
+                    </StackPanel>
+                </StackPanel>
+            </GroupBox>
             <GroupBox Margin="0,20,0,0" Style="{StaticResource MaterialDesignGroupBox}">
                 <GroupBox.Header>
                     <Label
