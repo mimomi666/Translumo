@@ -16,6 +16,7 @@ using Translumo.MVVM.Common;
 using Translumo.MVVM.Models;
 using Translumo.OCR.Configuration;
 using Translumo.OCR.WindowsOCR;
+using Translumo.Translation;
 using Translumo.Translation.Configuration;
 using Translumo.TTS;
 using Translumo.Utils;
