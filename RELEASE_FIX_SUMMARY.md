@@ -215,5 +215,4 @@ Before marking this issue as complete:
 ---
 
 **Date**: 2025-10-24  
-**Fixed by**: GitHub Copilot  
 **Status**: Fixed - awaiting verification
