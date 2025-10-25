@@ -42,6 +42,8 @@ This fork adds **Multimodal AI Translation** support, allowing Translumo to use 
 **Latest release with multimodal support:**  
 👉 **[Download from Releases](https://github.com/mimomi666/Translumo/releases/latest)**
 
+> **⚠️ Important Notice**: Version v1.0.0 has a known packaging issue (missing models and python directories) that prevents the program from running. This has been fixed. Please download v1.0.1 or later when available. See [RELEASE_FIX_SUMMARY.md](RELEASE_FIX_SUMMARY.md) for technical details.
+
 After downloading, unzip the archive and run `Translumo.exe`.
 
 This fork includes all features from the original Translumo v1.0.2 plus **multimodal AI translation** support.

@@ -2,6 +2,8 @@
 
 This guide will help you create the first release of Translumo with multimodal translation support.
 
+> **📢 Important Update (2025-10-24)**: The v1.0.0 release had a packaging issue where required models and python directories were missing, causing the program to not run. This issue has been fixed in the current version. If you downloaded v1.0.0, please wait for a new release. See [RELEASE_FIX_SUMMARY.md](RELEASE_FIX_SUMMARY.md) for details.
+
 ## Option 1: Using GitHub Actions (Manual Trigger) ⚡ EASIEST
 
 This is the easiest way to create a release without using command line:

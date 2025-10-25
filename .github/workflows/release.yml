@@ -32,7 +32,49 @@ jobs:
     - name: Build application
       run: dotnet publish src/Translumo/Translumo.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
       env:
-        SkipBinariesExtract: 'false'
+        SkipBinariesExtract: 'true'
+    
+    - name: Download and extract components
+      shell: pwsh
+      run: |
+        $componentsUrl = "https://github.com/ramjke/Translumo/releases/download/v.0.8.5/_components_v.1.0.0.zip"
+        $componentsZip = "components.zip"
+        $componentsPath = "ext_components"
+        
+        Write-Host "Downloading components from $componentsUrl..."
+        Invoke-WebRequest -Uri $componentsUrl -OutFile $componentsZip
+        
+        Write-Host "Extracting components..."
+        Expand-Archive -Path $componentsZip -DestinationPath $componentsPath -Force
+        
+        Write-Host "Copying models to publish directory..."
+        New-Item -ItemType Directory -Path "publish\models" -Force | Out-Null
+        
+        # Copy tessdata models
+        if (Test-Path "$componentsPath\models\tessdata") {
+          Write-Host "Copying tessdata models..."
+          Copy-Item -Path "$componentsPath\models\tessdata" -Destination "publish\models\" -Recurse -Force
+        }
+        
+        # Copy easyocr models
+        if (Test-Path "$componentsPath\models\easyocr") {
+          Write-Host "Copying easyocr models..."
+          Copy-Item -Path "$componentsPath\models\easyocr" -Destination "publish\models\" -Recurse -Force
+        }
+        
+        # Copy prediction models
+        if (Test-Path "$componentsPath\models\prediction") {
+          Write-Host "Copying prediction models..."
+          Copy-Item -Path "$componentsPath\models\prediction" -Destination "publish\models\" -Recurse -Force
+        }
+        
+        # Copy python runtime
+        if (Test-Path "$componentsPath\python") {
+          Write-Host "Copying python runtime..."
+          Copy-Item -Path "$componentsPath\python" -Destination "publish\" -Recurse -Force
+        }
+        
+        Write-Host "Components extracted and copied successfully."
     
     - name: Get version
       id: version
@@ -60,17 +102,34 @@ jobs:
         New-Item -ItemType Directory -Path $packageName -Force
         
         # Copy the main executable
+        Write-Host "Copying Translumo.exe..."
         Copy-Item -Path "publish\Translumo.exe" -Destination "$packageName\" -Force
         
         # Copy models and python directories if they exist
         if (Test-Path "publish\models") {
+          Write-Host "Copying models directory..."
           Copy-Item -Path "publish\models" -Destination "$packageName\" -Recurse -Force
+          
+          # List what was copied for verification
+          Write-Host "Models directory contents:"
+          Get-ChildItem -Path "$packageName\models" -Recurse | Select-Object FullName
+        } else {
+          Write-Warning "Models directory not found in publish folder!"
         }
+        
         if (Test-Path "publish\python") {
+          Write-Host "Copying python directory..."
           Copy-Item -Path "publish\python" -Destination "$packageName\" -Recurse -Force
+          
+          # List what was copied for verification
+          Write-Host "Python directory contents (first 20 files):"
+          Get-ChildItem -Path "$packageName\python" -Recurse | Select-Object FullName -First 20
+        } else {
+          Write-Warning "Python directory not found in publish folder!"
         }
         
         # Copy README and LICENSE
+        Write-Host "Copying documentation files..."
         Copy-Item -Path "README.md" -Destination "$packageName\" -Force
         Copy-Item -Path "LICENSE" -Destination "$packageName\" -Force
         if (Test-Path "IMPLEMENTATION_SUMMARY.md") {
@@ -78,7 +137,12 @@ jobs:
         }
         
         # Create zip file
+        Write-Host "Creating release package..."
         Compress-Archive -Path "$packageName\*" -DestinationPath $packagePath -Force
+        
+        # Show package size
+        $packageSize = (Get-Item $packagePath).Length / 1MB
+        Write-Host "Package created: $packagePath (Size: $([math]::Round($packageSize, 2)) MB)"
         
         # Set output
         echo "PACKAGE_PATH=$packagePath" >> $env:GITHUB_OUTPUT
